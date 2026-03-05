@@ -1,0 +1,1064 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Moscow Beauty — Генератор Афиш</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700;800;900&family=Cormorant+Garamond:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600&family=Montserrat:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'Inter', sans-serif;
+    background: #1A0E14;
+    color: #FFF8F9;
+    min-height: 100vh;
+  }
+  .header {
+    text-align: center;
+    padding: 40px 20px 20px;
+    border-bottom: 1px solid rgba(212,175,55,0.2);
+  }
+  .header h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: 28px;
+    color: #D4AF37;
+    margin-bottom: 8px;
+  }
+  .header p {
+    color: #9A7888;
+    font-size: 14px;
+  }
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+    gap: 30px;
+    padding: 30px;
+    max-width: 1600px;
+    margin: 0 auto;
+  }
+  .card {
+    background: rgba(42,26,36,0.6);
+    border: 1px solid rgba(255,248,249,0.08);
+    border-radius: 16px;
+    overflow: hidden;
+    backdrop-filter: blur(12px);
+  }
+  .card-title {
+    padding: 16px 20px;
+    font-family: 'Playfair Display', serif;
+    font-size: 16px;
+    color: #D4AF37;
+    border-bottom: 1px solid rgba(255,248,249,0.06);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .card-title span {
+    font-family: 'Inter', sans-serif;
+    font-size: 11px;
+    color: #9A7888;
+    font-weight: 400;
+  }
+  .canvas-wrap {
+    padding: 12px;
+    display: flex;
+    justify-content: center;
+    background: rgba(0,0,0,0.2);
+  }
+  .canvas-wrap canvas {
+    width: 100%;
+    max-width: 320px;
+    height: auto;
+    border-radius: 4px;
+  }
+  .controls {
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  .controls input[type="text"] {
+    background: rgba(255,248,249,0.06);
+    border: 1px solid rgba(255,248,249,0.1);
+    color: #FFF8F9;
+    padding: 10px 14px;
+    border-radius: 8px;
+    font-size: 13px;
+    font-family: 'Inter', sans-serif;
+    outline: none;
+    transition: border-color 0.3s;
+  }
+  .controls input[type="text"]:focus {
+    border-color: rgba(212,175,55,0.4);
+  }
+  .controls input[type="text"]::placeholder {
+    color: #7A5060;
+  }
+  .btn-row {
+    display: flex;
+    gap: 8px;
+  }
+  .btn {
+    flex: 1;
+    padding: 10px 16px;
+    border: none;
+    border-radius: 8px;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s;
+    font-family: 'Inter', sans-serif;
+  }
+  .btn-upload {
+    background: rgba(160,41,74,0.3);
+    color: #CC4D70;
+    border: 1px solid rgba(160,41,74,0.3);
+  }
+  .btn-upload:hover { background: rgba(160,41,74,0.5); }
+  .btn-download {
+    background: linear-gradient(135deg, #D4AF37, #C9A227);
+    color: #1A0E14;
+  }
+  .btn-download:hover { transform: translateY(-1px); box-shadow: 0 4px 16px rgba(212,175,55,0.3); }
+  input[type="file"] { display: none; }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <h1>Moscow Beauty — Генератор Афиш</h1>
+  <p>10 шаблонов для различных мероприятий. Загрузите фото, добавьте имя (опционально), скачайте JPEG.</p>
+</div>
+
+<div class="grid" id="grid"></div>
+
+<script>
+// ============================================================
+// CONFIG
+// ============================================================
+const W = 1080, H = 1520;
+const GOLD = '#D4AF37';
+const GOLD_DARK = '#C9A227';
+const GOLD_LIGHT = '#E5C76B';
+const CHERRY = '#A0294A';
+const CHERRY_DARK = '#6E1A35';
+const CHERRY_LIGHT = '#CC4D70';
+const BLACK = '#1A0E14';
+const BLACK_LIGHT = '#2A1A24';
+const WHITE = '#FFF8F9';
+
+const EVENT_DATE = '7 марта 2026';
+const EVENT_VENUE = 'Park Hotel Greenwood, Путилково';
+const EVENT_SITE = 'moscowbeauty.ru';
+const LOGO_TEXT = 'MOSCOW BEAUTY';
+
+// ============================================================
+// TEMPLATES DEFINITION
+// ============================================================
+const templates = [
+  {
+    id: 'royal-crown',
+    title: 'Royal Crown',
+    eventType: 'ФЕСТИВАЛЬ КРАСОТЫ, МОДЫ И ТАЛАНТА',
+    eventSubtitle: 'MOSCOW BEAUTY 2026',
+  },
+  {
+    id: 'golden-frame',
+    title: 'Golden Frame',
+    eventType: 'КОНКУРС КРАСОТЫ',
+    eventSubtitle: 'MOSCOW BEAUTY 2026',
+  },
+  {
+    id: 'geometric-modern',
+    title: 'Geometric Modern',
+    eventType: 'КОНКУРС МОДЕЛИ',
+    eventSubtitle: 'MODEL OF THE YEAR',
+  },
+  {
+    id: 'art-deco',
+    title: 'Art Deco',
+    eventType: 'КОНКУРС ДИЗАЙНЕРОВ',
+    eventSubtitle: 'ПОСВЯЩАЕТСЯ В. ЗАЙЦЕВУ',
+  },
+  {
+    id: 'minimalist-chic',
+    title: 'Minimalist Chic',
+    eventType: 'КОНКУРС СТИЛИСТОВ',
+    eventSubtitle: 'В СТИЛЕ PIERRE CARDIN',
+  },
+  {
+    id: 'moscow-skyline',
+    title: 'Moscow Skyline',
+    eventType: 'MISS MOSCOW',
+    eventSubtitle: 'КРАСОТА СТОЛИЦЫ',
+  },
+  {
+    id: 'starlight',
+    title: 'Starlight',
+    eventType: 'ЮНЫЕ ТАЛАНТЫ',
+    eventSubtitle: 'КОНКУРС ДЛЯ БУДУЩИХ ЗВЁЗД',
+  },
+  {
+    id: 'red-carpet',
+    title: 'Red Carpet',
+    eventType: 'ГАЛА-ВЕЧЕР КРАСОТЫ',
+    eventSubtitle: 'MOSCOW BEAUTY AWARDS',
+  },
+  {
+    id: 'film-strip',
+    title: 'Film Strip',
+    eventType: 'КОНКУРС ФОТОМОДЕЛЕЙ',
+    eventSubtitle: 'BEST PHOTO FACE 2026',
+  },
+  {
+    id: 'diamond-elegance',
+    title: 'Diamond Elegance',
+    eventType: 'МИСС ЭЛЕГАНТНОСТЬ',
+    eventSubtitle: 'MOSCOW BEAUTY 2026',
+  },
+];
+
+// ============================================================
+// DRAWING HELPERS
+// ============================================================
+function drawCrown(ctx, cx, cy, size, color) {
+  ctx.save();
+  ctx.translate(cx, cy);
+  const s = size / 100;
+  ctx.beginPath();
+  ctx.moveTo(-50*s, 30*s);
+  ctx.lineTo(-50*s, -10*s);
+  ctx.lineTo(-30*s, -40*s);
+  ctx.lineTo(-15*s, -10*s);
+  ctx.lineTo(0, -55*s);
+  ctx.lineTo(15*s, -10*s);
+  ctx.lineTo(30*s, -40*s);
+  ctx.lineTo(50*s, -10*s);
+  ctx.lineTo(50*s, 30*s);
+  ctx.closePath();
+  ctx.strokeStyle = color;
+  ctx.lineWidth = 2 * s;
+  ctx.stroke();
+  // jewels
+  ctx.fillStyle = color;
+  ctx.globalAlpha = 0.7;
+  ctx.beginPath(); ctx.arc(-30*s, -40*s, 4*s, 0, Math.PI*2); ctx.fill();
+  ctx.beginPath(); ctx.arc(0, -55*s, 5*s, 0, Math.PI*2); ctx.fill();
+  ctx.beginPath(); ctx.arc(30*s, -40*s, 4*s, 0, Math.PI*2); ctx.fill();
+  ctx.globalAlpha = 1;
+  // base band
+  ctx.strokeRect(-52*s, 30*s, 104*s, 12*s);
+  ctx.restore();
+}
+
+function drawFooter(ctx, w, h) {
+  const fh = 120;
+  ctx.save();
+  ctx.fillStyle = 'rgba(14,6,8,0.75)';
+  ctx.fillRect(0, h - fh, w, fh);
+  // top line
+  const grd = ctx.createLinearGradient(0, h - fh, w, h - fh);
+  grd.addColorStop(0, 'transparent');
+  grd.addColorStop(0.3, GOLD);
+  grd.addColorStop(0.7, GOLD);
+  grd.addColorStop(1, 'transparent');
+  ctx.fillStyle = grd;
+  ctx.fillRect(0, h - fh, w, 1.5);
+
+  ctx.textAlign = 'center';
+  ctx.fillStyle = GOLD;
+  ctx.font = '600 22px "Inter"';
+  ctx.fillText(EVENT_DATE + '  •  ' + EVENT_VENUE, w/2, h - fh + 50);
+  ctx.fillStyle = 'rgba(255,248,249,0.6)';
+  ctx.font = '400 18px "Inter"';
+  ctx.fillText(EVENT_SITE, w/2, h - fh + 85);
+  ctx.restore();
+}
+
+function drawPhotoArea(ctx, x, y, w, h, borderColor, borderWidth) {
+  ctx.save();
+  ctx.strokeStyle = borderColor || GOLD;
+  ctx.lineWidth = borderWidth || 2;
+  ctx.setLineDash([]);
+  ctx.strokeRect(x, y, w, h);
+  // subtle cross-lines indicating photo area
+  ctx.strokeStyle = 'rgba(212,175,55,0.15)';
+  ctx.lineWidth = 1;
+  ctx.beginPath();
+  ctx.moveTo(x, y); ctx.lineTo(x+w, y+h);
+  ctx.moveTo(x+w, y); ctx.lineTo(x, y+h);
+  ctx.stroke();
+  ctx.textAlign = 'center';
+  ctx.fillStyle = 'rgba(212,175,55,0.25)';
+  ctx.font = '300 16px "Inter"';
+  ctx.fillText('ФОТО УЧАСТНИЦЫ', x+w/2, y+h/2);
+  ctx.restore();
+}
+
+function drawPhoto(ctx, img, x, y, w, h) {
+  if (!img) return;
+  ctx.save();
+  ctx.beginPath();
+  ctx.rect(x, y, w, h);
+  ctx.clip();
+  const imgRatio = img.width / img.height;
+  const areaRatio = w / h;
+  let sx, sy, sw, sh;
+  if (imgRatio > areaRatio) {
+    sh = img.height;
+    sw = sh * areaRatio;
+    sx = (img.width - sw) / 2;
+    sy = 0;
+  } else {
+    sw = img.width;
+    sh = sw / areaRatio;
+    sx = 0;
+    sy = (img.height - sh) / 2;
+  }
+  ctx.drawImage(img, sx, sy, sw, sh, x, y, w, h);
+  ctx.restore();
+}
+
+function drawName(ctx, name, x, y, maxW) {
+  if (!name || !name.trim()) return;
+  ctx.save();
+  ctx.textAlign = 'center';
+  ctx.fillStyle = WHITE;
+  ctx.font = '600 36px "Playfair Display"';
+  ctx.shadowColor = 'rgba(0,0,0,0.6)';
+  ctx.shadowBlur = 10;
+  ctx.fillText(name.trim().toUpperCase(), x, y, maxW);
+  ctx.restore();
+}
+
+function goldGradient(ctx, x1, y1, x2, y2) {
+  const g = ctx.createLinearGradient(x1, y1, x2, y2);
+  g.addColorStop(0, GOLD_LIGHT);
+  g.addColorStop(0.5, GOLD);
+  g.addColorStop(1, GOLD_DARK);
+  return g;
+}
+
+function cherryGradient(ctx, x1, y1, x2, y2) {
+  const g = ctx.createLinearGradient(x1, y1, x2, y2);
+  g.addColorStop(0, CHERRY_DARK);
+  g.addColorStop(0.5, CHERRY);
+  g.addColorStop(1, CHERRY_DARK);
+  return g;
+}
+
+// ============================================================
+// TEMPLATE RENDERERS
+// ============================================================
+
+// 1. Royal Crown
+function drawTemplate0(ctx, w, h, photo, name) {
+  // bg
+  const bg = ctx.createLinearGradient(0,0,0,h);
+  bg.addColorStop(0, '#2A1020');
+  bg.addColorStop(0.4, BLACK);
+  bg.addColorStop(1, '#1A0A12');
+  ctx.fillStyle = bg;
+  ctx.fillRect(0,0,w,h);
+
+  // outer gold border
+  ctx.strokeStyle = GOLD;
+  ctx.lineWidth = 3;
+  ctx.strokeRect(30, 30, w-60, h-60);
+  ctx.strokeStyle = 'rgba(212,175,55,0.3)';
+  ctx.lineWidth = 1;
+  ctx.strokeRect(40, 40, w-80, h-80);
+
+  // crown
+  drawCrown(ctx, w/2, 130, 80, GOLD);
+
+  // logo
+  ctx.textAlign = 'center';
+  ctx.fillStyle = GOLD;
+  ctx.font = '700 20px "Montserrat"';
+  ctx.letterSpacing = '8px';
+  ctx.fillText(LOGO_TEXT, w/2, 200);
+
+  // divider
+  const dg = goldGradient(ctx, 200, 220, w-200, 220);
+  ctx.fillStyle = dg;
+  ctx.fillRect(200, 220, w-400, 1.5);
+
+  // event title
+  ctx.fillStyle = WHITE;
+  ctx.font = '800 38px "Playfair Display"';
+  ctx.fillText('ФЕСТИВАЛЬ', w/2, 280);
+  ctx.font = '400 26px "Cormorant Garamond"';
+  ctx.fillStyle = GOLD_LIGHT;
+  ctx.fillText('КРАСОТЫ, МОДЫ И ТАЛАНТА', w/2, 318);
+
+  // photo area
+  const px = 140, py = 370, pw = w - 280, ph = 780;
+  drawPhoto(ctx, photo, px, py, pw, ph);
+  if (!photo) drawPhotoArea(ctx, px, py, pw, ph, GOLD, 2);
+  // inner gold frame for photo
+  ctx.strokeStyle = GOLD;
+  ctx.lineWidth = 2;
+  ctx.strokeRect(px, py, pw, ph);
+  // corner ornaments
+  const cs = 20;
+  [
+    [px, py], [px+pw-cs, py], [px, py+ph-cs], [px+pw-cs, py+ph-cs]
+  ].forEach(([cx, cy]) => {
+    ctx.strokeStyle = GOLD_LIGHT;
+    ctx.lineWidth = 2;
+    ctx.strokeRect(cx, cy, cs, cs);
+  });
+
+  // name
+  drawName(ctx, name, w/2, ph + py + 55, pw);
+
+  drawFooter(ctx, w, h);
+}
+
+// 2. Golden Frame
+function drawTemplate1(ctx, w, h, photo, name) {
+  const bg = ctx.createRadialGradient(w/2, h/2, 100, w/2, h/2, h);
+  bg.addColorStop(0, '#2A1520');
+  bg.addColorStop(1, BLACK);
+  ctx.fillStyle = bg;
+  ctx.fillRect(0,0,w,h);
+
+  // double frame
+  ctx.strokeStyle = 'rgba(212,175,55,0.2)';
+  ctx.lineWidth = 1;
+  ctx.strokeRect(20, 20, w-40, h-40);
+  ctx.strokeStyle = GOLD;
+  ctx.lineWidth = 3;
+  ctx.strokeRect(50, 50, w-100, h-100);
+
+  // header
+  ctx.textAlign = 'center';
+  ctx.fillStyle = GOLD;
+  ctx.font = '500 16px "Montserrat"';
+  ctx.fillText(LOGO_TEXT, w/2, 100);
+
+  ctx.fillStyle = WHITE;
+  ctx.font = '900 52px "Playfair Display"';
+  ctx.fillText('КОНКУРС', w/2, 170);
+  ctx.fillStyle = goldGradient(ctx, 0, 180, w, 220);
+  ctx.font = '700 44px "Playfair Display"';
+  ctx.fillText('КРАСОТЫ', w/2, 225);
+
+  // elegant separator
+  ctx.strokeStyle = GOLD;
+  ctx.lineWidth = 1;
+  ctx.beginPath();
+  ctx.moveTo(300, 250); ctx.lineTo(w-300, 250);
+  ctx.stroke();
+  ctx.fillStyle = BLACK;
+  ctx.beginPath(); ctx.arc(w/2, 250, 12, 0, Math.PI*2); ctx.fill();
+  ctx.strokeStyle = GOLD;
+  ctx.lineWidth = 1.5;
+  ctx.beginPath(); ctx.arc(w/2, 250, 12, 0, Math.PI*2); ctx.stroke();
+  ctx.fillStyle = GOLD;
+  ctx.beginPath(); ctx.arc(w/2, 250, 4, 0, Math.PI*2); ctx.fill();
+
+  // photo area — large ornate frame
+  const px = 120, py = 290, pw = w - 240, ph = 850;
+  drawPhoto(ctx, photo, px, py, pw, ph);
+  if (!photo) drawPhotoArea(ctx, px, py, pw, ph, GOLD, 1.5);
+  // ornate double border
+  ctx.strokeStyle = GOLD;
+  ctx.lineWidth = 3;
+  ctx.strokeRect(px, py, pw, ph);
+  ctx.strokeStyle = 'rgba(212,175,55,0.3)';
+  ctx.lineWidth = 1;
+  ctx.strokeRect(px-8, py-8, pw+16, ph+16);
+
+  drawName(ctx, name, w/2, py + ph + 55, pw);
+  drawFooter(ctx, w, h);
+}
+
+// 3. Geometric Modern
+function drawTemplate2(ctx, w, h, photo, name) {
+  ctx.fillStyle = BLACK;
+  ctx.fillRect(0,0,w,h);
+
+  // diagonal cherry stripe
+  ctx.save();
+  ctx.beginPath();
+  ctx.moveTo(0, 0); ctx.lineTo(w*0.35, 0); ctx.lineTo(0, h*0.35); ctx.closePath();
+  ctx.fillStyle = 'rgba(160,41,74,0.15)';
+  ctx.fill();
+  ctx.beginPath();
+  ctx.moveTo(w, h); ctx.lineTo(w*0.65, h); ctx.lineTo(w, h*0.65); ctx.closePath();
+  ctx.fill();
+  ctx.restore();
+
+  // geometric gold lines
+  ctx.strokeStyle = GOLD;
+  ctx.lineWidth = 2;
+  ctx.beginPath();
+  ctx.moveTo(60, 60); ctx.lineTo(w-60, 60); ctx.lineTo(w-60, 120);
+  ctx.stroke();
+  ctx.beginPath();
+  ctx.moveTo(w-60, h-60); ctx.lineTo(60, h-60); ctx.lineTo(60, h-120);
+  ctx.stroke();
+
+  // header
+  ctx.textAlign = 'left';
+  ctx.fillStyle = GOLD;
+  ctx.font = '300 14px "Montserrat"';
+  ctx.fillText(LOGO_TEXT, 80, 100);
+
+  ctx.textAlign = 'center';
+  ctx.fillStyle = WHITE;
+  ctx.font = '800 60px "Montserrat"';
+  ctx.fillText('КОНКУРС', w/2, 200);
+  ctx.fillStyle = GOLD;
+  ctx.font = '300 48px "Montserrat"';
+  ctx.fillText('МОДЕЛИ', w/2, 260);
+
+  // horizontal gold bar
+  ctx.fillStyle = GOLD;
+  ctx.fillRect(80, 290, w-160, 3);
+
+  // photo area — full width strip
+  const px = 80, py = 320, pw = w-160, ph = 820;
+  drawPhoto(ctx, photo, px, py, pw, ph);
+  if (!photo) drawPhotoArea(ctx, px, py, pw, ph, 'rgba(212,175,55,0.4)', 1);
+  ctx.strokeStyle = GOLD;
+  ctx.lineWidth = 1.5;
+  ctx.strokeRect(px, py, pw, ph);
+
+  drawName(ctx, name, w/2, py + ph + 50, pw);
+  drawFooter(ctx, w, h);
+}
+
+// 4. Art Deco (Zaitsev tribute)
+function drawTemplate3(ctx, w, h, photo, name) {
+  const bg = ctx.createLinearGradient(0,0,w,h);
+  bg.addColorStop(0, '#1F0F18');
+  bg.addColorStop(1, '#140A10');
+  ctx.fillStyle = bg;
+  ctx.fillRect(0,0,w,h);
+
+  // art deco fan pattern at top
+  ctx.save();
+  ctx.translate(w/2, 0);
+  for (let i = -6; i <= 6; i++) {
+    ctx.beginPath();
+    ctx.moveTo(0, 180);
+    const angle = (i * 12) * Math.PI / 180;
+    ctx.lineTo(Math.sin(angle) * 500, 180 - Math.cos(angle) * 500);
+    ctx.strokeStyle = i % 2 === 0 ? 'rgba(212,175,55,0.2)' : 'rgba(160,41,74,0.15)';
+    ctx.lineWidth = 1;
+    ctx.stroke();
+  }
+  ctx.restore();
+
+  // semicircle at top
+  ctx.beginPath();
+  ctx.arc(w/2, 0, 180, 0, Math.PI);
+  ctx.strokeStyle = GOLD;
+  ctx.lineWidth = 2;
+  ctx.stroke();
+
+  // logo + title
+  ctx.textAlign = 'center';
+  ctx.fillStyle = GOLD;
+  ctx.font = '500 14px "Montserrat"';
+  ctx.fillText(LOGO_TEXT, w/2, 50);
+
+  ctx.fillStyle = WHITE;
+  ctx.font = '700 44px "Playfair Display"';
+  ctx.fillText('КОНКУРС', w/2, 120);
+  ctx.fillStyle = GOLD_LIGHT;
+  ctx.font = '400 36px "Cormorant Garamond"';
+  ctx.fillText('ДИЗАЙНЕРОВ', w/2, 168);
+
+  // dedication
+  ctx.fillStyle = 'rgba(204,77,112,0.7)';
+  ctx.font = '400 16px "Cormorant Garamond"';
+  ctx.fillText('Посвящается Вячеславу Зайцеву', w/2, 210);
+
+  // gold divider with diamond
+  ctx.fillStyle = GOLD;
+  ctx.fillRect(200, 235, w-400, 1);
+  ctx.save();
+  ctx.translate(w/2, 235);
+  ctx.rotate(Math.PI/4);
+  ctx.fillStyle = GOLD;
+  ctx.fillRect(-6, -6, 12, 12);
+  ctx.restore();
+
+  // photo area
+  const px = 100, py = 275, pw = w-200, ph = 860;
+  drawPhoto(ctx, photo, px, py, pw, ph);
+  if (!photo) drawPhotoArea(ctx, px, py, pw, ph, GOLD, 1.5);
+  // art deco corners
+  ctx.strokeStyle = GOLD;
+  ctx.lineWidth = 2;
+  const clen = 40;
+  // TL
+  ctx.beginPath(); ctx.moveTo(px, py+clen); ctx.lineTo(px, py); ctx.lineTo(px+clen, py); ctx.stroke();
+  // TR
+  ctx.beginPath(); ctx.moveTo(px+pw-clen, py); ctx.lineTo(px+pw, py); ctx.lineTo(px+pw, py+clen); ctx.stroke();
+  // BL
+  ctx.beginPath(); ctx.moveTo(px, py+ph-clen); ctx.lineTo(px, py+ph); ctx.lineTo(px+clen, py+ph); ctx.stroke();
+  // BR
+  ctx.beginPath(); ctx.moveTo(px+pw-clen, py+ph); ctx.lineTo(px+pw, py+ph); ctx.lineTo(px+pw, py+ph-clen); ctx.stroke();
+
+  drawName(ctx, name, w/2, py + ph + 50, pw);
+  drawFooter(ctx, w, h);
+}
+
+// 5. Minimalist Chic (Pierre Cardin)
+function drawTemplate4(ctx, w, h, photo, name) {
+  ctx.fillStyle = '#0F0A0C';
+  ctx.fillRect(0,0,w,h);
+
+  // single vertical gold line left
+  ctx.fillStyle = GOLD;
+  ctx.fillRect(60, 60, 2, h-120);
+
+  // logo top-left
+  ctx.textAlign = 'left';
+  ctx.fillStyle = GOLD;
+  ctx.font = '300 12px "Montserrat"';
+  ctx.fillText(LOGO_TEXT, 85, 90);
+
+  // title block
+  ctx.fillStyle = WHITE;
+  ctx.font = '700 56px "Playfair Display"';
+  ctx.textAlign = 'left';
+  ctx.fillText('КОНКУРС', 85, 170);
+  ctx.fillStyle = GOLD;
+  ctx.font = '300 42px "Montserrat"';
+  ctx.fillText('СТИЛИСТОВ', 85, 225);
+
+  // cardin reference
+  ctx.fillStyle = 'rgba(204,77,112,0.5)';
+  ctx.font = '300 14px "Cormorant Garamond"';
+  ctx.fillText('В стиле Pierre Cardin', 85, 265);
+
+  // thin horizontal line
+  ctx.fillStyle = 'rgba(212,175,55,0.3)';
+  ctx.fillRect(85, 285, 400, 1);
+
+  // photo area — offset right
+  const px = 150, py = 320, pw = w-210, ph = 830;
+  drawPhoto(ctx, photo, px, py, pw, ph);
+  if (!photo) drawPhotoArea(ctx, px, py, pw, ph, 'rgba(212,175,55,0.25)', 1);
+  ctx.strokeStyle = GOLD;
+  ctx.lineWidth = 1;
+  ctx.strokeRect(px, py, pw, ph);
+
+  // name — left aligned
+  if (name && name.trim()) {
+    ctx.textAlign = 'left';
+    ctx.fillStyle = WHITE;
+    ctx.font = '600 30px "Playfair Display"';
+    ctx.shadowColor = 'rgba(0,0,0,0.6)';
+    ctx.shadowBlur = 8;
+    ctx.fillText(name.trim().toUpperCase(), 85, py + ph + 50, pw);
+    ctx.shadowBlur = 0;
+  }
+
+  drawFooter(ctx, w, h);
+}
+
+// 6. Moscow Skyline
+function drawTemplate5(ctx, w, h, photo, name) {
+  const bg = ctx.createLinearGradient(0,0,0,h);
+  bg.addColorStop(0, CHERRY_DARK);
+  bg.addColorStop(0.5, BLACK);
+  bg.addColorStop(1, '#140A10');
+  ctx.fillStyle = bg;
+  ctx.fillRect(0,0,w,h);
+
+  // simple Moscow skyline silhouette at top
+  ctx.save();
+  ctx.fillStyle = 'rgba(212,175,55,0.08)';
+  ctx.beginPath();
+  ctx.moveTo(0, 200);
+  // kremlin-like towers
+  ctx.lineTo(80, 200); ctx.lineTo(100, 120); ctx.lineTo(105, 80); ctx.lineTo(110, 120); ctx.lineTo(130, 200);
+  ctx.lineTo(200, 200); ctx.lineTo(220, 140); ctx.lineTo(250, 200);
+  ctx.lineTo(350, 200); ctx.lineTo(360, 100); ctx.lineTo(365, 50); ctx.lineTo(370, 100); ctx.lineTo(380, 200);
+  ctx.lineTo(500, 200); ctx.lineTo(530, 150); ctx.lineTo(560, 200);
+  ctx.lineTo(650, 200); ctx.lineTo(660, 80); ctx.lineTo(670, 40); ctx.lineTo(680, 80); ctx.lineTo(700, 200);
+  ctx.lineTo(800, 200); ctx.lineTo(820, 130); ctx.lineTo(850, 200);
+  ctx.lineTo(920, 200); ctx.lineTo(940, 90); ctx.lineTo(945, 55); ctx.lineTo(950, 90); ctx.lineTo(970, 200);
+  ctx.lineTo(w, 200);
+  ctx.lineTo(w, 0); ctx.lineTo(0, 0);
+  ctx.closePath();
+  ctx.fill();
+  ctx.restore();
+
+  // crown + logo
+  drawCrown(ctx, w/2, 100, 60, GOLD);
+  ctx.textAlign = 'center';
+  ctx.fillStyle = GOLD;
+  ctx.font = '500 16px "Montserrat"';
+  ctx.fillText(LOGO_TEXT, w/2, 160);
+
+  // title
+  ctx.fillStyle = WHITE;
+  ctx.font = '900 64px "Playfair Display"';
+  ctx.fillText('MISS MOSCOW', w/2, 245);
+  ctx.fillStyle = GOLD_LIGHT;
+  ctx.font = '400 24px "Cormorant Garamond"';
+  ctx.fillText('КРАСОТА СТОЛИЦЫ', w/2, 285);
+
+  // divider
+  ctx.fillStyle = goldGradient(ctx, 250, 305, w-250, 305);
+  ctx.fillRect(250, 305, w-500, 1.5);
+
+  // photo area
+  const px = 120, py = 340, pw = w-240, ph = 810;
+  drawPhoto(ctx, photo, px, py, pw, ph);
+  if (!photo) drawPhotoArea(ctx, px, py, pw, ph, GOLD, 2);
+  ctx.strokeStyle = GOLD;
+  ctx.lineWidth = 2;
+  ctx.strokeRect(px, py, pw, ph);
+
+  drawName(ctx, name, w/2, py + ph + 55, pw);
+  drawFooter(ctx, w, h);
+}
+
+// 7. Starlight
+function drawTemplate6(ctx, w, h, photo, name) {
+  const bg = ctx.createRadialGradient(w/2, 300, 50, w/2, 300, h);
+  bg.addColorStop(0, '#2A1525');
+  bg.addColorStop(1, BLACK);
+  ctx.fillStyle = bg;
+  ctx.fillRect(0,0,w,h);
+
+  // scatter stars
+  ctx.save();
+  const starPositions = [
+    [100,80,3], [250,50,2], [400,90,4], [600,40,2.5], [750,70,3],
+    [900,55,2], [150,160,2], [500,130,3], [830,150,2.5], [950,100,2],
+    [80,200,1.5], [350,180,2], [680,190,1.5], [1000,170,2]
+  ];
+  starPositions.forEach(([x,y,r]) => {
+    ctx.beginPath();
+    ctx.arc(x, y, r, 0, Math.PI*2);
+    ctx.fillStyle = GOLD_LIGHT;
+    ctx.globalAlpha = 0.3 + Math.random() * 0.4;
+    ctx.fill();
+  });
+  ctx.globalAlpha = 1;
+  ctx.restore();
+
+  // logo
+  ctx.textAlign = 'center';
+  ctx.fillStyle = GOLD;
+  ctx.font = '500 14px "Montserrat"';
+  ctx.fillText(LOGO_TEXT, w/2, 80);
+
+  // star accent
+  drawCrown(ctx, w/2, 140, 50, GOLD_LIGHT);
+
+  // title
+  ctx.fillStyle = WHITE;
+  ctx.font = '800 50px "Playfair Display"';
+  ctx.fillText('ЮНЫЕ ТАЛАНТЫ', w/2, 225);
+  ctx.fillStyle = GOLD;
+  ctx.font = '400 22px "Cormorant Garamond"';
+  ctx.fillText('КОНКУРС ДЛЯ БУДУЩИХ ЗВЁЗД', w/2, 265);
+
+  // subtle sparkle divider
+  ctx.fillStyle = goldGradient(ctx, 300, 290, w-300, 290);
+  ctx.fillRect(300, 290, w-600, 1);
+
+  // photo area
+  const px = 130, py = 320, pw = w-260, ph = 830;
+  drawPhoto(ctx, photo, px, py, pw, ph);
+  if (!photo) drawPhotoArea(ctx, px, py, pw, ph, GOLD_LIGHT, 1.5);
+  ctx.strokeStyle = GOLD_LIGHT;
+  ctx.lineWidth = 1.5;
+  ctx.strokeRect(px, py, pw, ph);
+  // rounded corner glow
+  ctx.strokeStyle = 'rgba(229,199,107,0.15)';
+  ctx.lineWidth = 8;
+  ctx.strokeRect(px-4, py-4, pw+8, ph+8);
+
+  drawName(ctx, name, w/2, py + ph + 52, pw);
+  drawFooter(ctx, w, h);
+}
+
+// 8. Red Carpet
+function drawTemplate7(ctx, w, h, photo, name) {
+  // dramatic cherry-to-black
+  const bg = ctx.createLinearGradient(0,0,0,h);
+  bg.addColorStop(0, '#3A0E22');
+  bg.addColorStop(0.3, CHERRY_DARK);
+  bg.addColorStop(0.6, BLACK);
+  bg.addColorStop(1, '#0A0508');
+  ctx.fillStyle = bg;
+  ctx.fillRect(0,0,w,h);
+
+  // spotlight effect
+  ctx.save();
+  const spot = ctx.createRadialGradient(w/2, 400, 50, w/2, 400, 600);
+  spot.addColorStop(0, 'rgba(212,175,55,0.06)');
+  spot.addColorStop(1, 'transparent');
+  ctx.fillStyle = spot;
+  ctx.fillRect(0,0,w,h);
+  ctx.restore();
+
+  // vertical cherry stripes
+  ctx.fillStyle = 'rgba(160,41,74,0.08)';
+  ctx.fillRect(0, 0, 80, h);
+  ctx.fillRect(w-80, 0, 80, h);
+
+  // gold edge lines
+  ctx.strokeStyle = GOLD;
+  ctx.lineWidth = 1;
+  ctx.beginPath(); ctx.moveTo(80, 0); ctx.lineTo(80, h); ctx.stroke();
+  ctx.beginPath(); ctx.moveTo(w-80, 0); ctx.lineTo(w-80, h); ctx.stroke();
+
+  // logo
+  ctx.textAlign = 'center';
+  ctx.fillStyle = GOLD;
+  ctx.font = '500 14px "Montserrat"';
+  ctx.fillText(LOGO_TEXT, w/2, 70);
+  drawCrown(ctx, w/2, 120, 55, GOLD);
+
+  // title
+  ctx.fillStyle = WHITE;
+  ctx.font = '800 42px "Playfair Display"';
+  ctx.fillText('ГАЛА-ВЕЧЕР', w/2, 200);
+  ctx.fillStyle = goldGradient(ctx, 0, 220, w, 250);
+  ctx.font = '700 38px "Playfair Display"';
+  ctx.fillText('КРАСОТЫ', w/2, 250);
+  ctx.fillStyle = CHERRY_LIGHT;
+  ctx.font = '400 18px "Cormorant Garamond"';
+  ctx.fillText('MOSCOW BEAUTY AWARDS', w/2, 285);
+
+  // divider
+  ctx.fillStyle = GOLD;
+  ctx.fillRect(200, 308, w-400, 2);
+
+  // photo area
+  const px = 120, py = 340, pw = w-240, ph = 810;
+  drawPhoto(ctx, photo, px, py, pw, ph);
+  if (!photo) drawPhotoArea(ctx, px, py, pw, ph, GOLD, 1.5);
+  ctx.strokeStyle = GOLD;
+  ctx.lineWidth = 2;
+  ctx.strokeRect(px, py, pw, ph);
+
+  drawName(ctx, name, w/2, py + ph + 55, pw);
+  drawFooter(ctx, w, h);
+}
+
+// 9. Film Strip
+function drawTemplate8(ctx, w, h, photo, name) {
+  ctx.fillStyle = BLACK;
+  ctx.fillRect(0,0,w,h);
+
+  // film strip borders
+  const stripW = 50;
+  const holeSize = 20, holeGap = 40;
+  [0, w - stripW].forEach(sx => {
+    ctx.fillStyle = '#1E1218';
+    ctx.fillRect(sx, 0, stripW, h);
+    ctx.strokeStyle = 'rgba(212,175,55,0.2)';
+    ctx.lineWidth = 1;
+    ctx.strokeRect(sx, 0, stripW, h);
+    // sprocket holes
+    for (let y = 30; y < h - 30; y += holeGap) {
+      ctx.fillStyle = BLACK;
+      ctx.fillRect(sx + (stripW-holeSize)/2, y, holeSize, holeSize);
+      ctx.strokeStyle = 'rgba(212,175,55,0.15)';
+      ctx.strokeRect(sx + (stripW-holeSize)/2, y, holeSize, holeSize);
+    }
+  });
+
+  // header
+  ctx.textAlign = 'center';
+  ctx.fillStyle = GOLD;
+  ctx.font = '500 14px "Montserrat"';
+  ctx.fillText(LOGO_TEXT, w/2, 80);
+
+  ctx.fillStyle = WHITE;
+  ctx.font = '700 44px "Playfair Display"';
+  ctx.fillText('КОНКУРС', w/2, 150);
+  ctx.fillStyle = GOLD;
+  ctx.font = '700 40px "Playfair Display"';
+  ctx.fillText('ФОТОМОДЕЛЕЙ', w/2, 200);
+  ctx.fillStyle = 'rgba(204,77,112,0.6)';
+  ctx.font = '400 18px "Cormorant Garamond"';
+  ctx.fillText('BEST PHOTO FACE 2026', w/2, 238);
+
+  ctx.fillStyle = goldGradient(ctx, 200, 260, w-200, 260);
+  ctx.fillRect(200, 260, w-400, 1.5);
+
+  // photo area
+  const px = 80, py = 290, pw = w-160, ph = 860;
+  drawPhoto(ctx, photo, px, py, pw, ph);
+  if (!photo) drawPhotoArea(ctx, px, py, pw, ph, 'rgba(212,175,55,0.3)', 1);
+  ctx.strokeStyle = GOLD;
+  ctx.lineWidth = 1.5;
+  ctx.strokeRect(px, py, pw, ph);
+
+  drawName(ctx, name, w/2, py + ph + 50, pw);
+  drawFooter(ctx, w, h);
+}
+
+// 10. Diamond Elegance
+function drawTemplate9(ctx, w, h, photo, name) {
+  const bg = ctx.createLinearGradient(0,0,w,h);
+  bg.addColorStop(0, '#180D14');
+  bg.addColorStop(0.5, '#1A0E14');
+  bg.addColorStop(1, '#120810');
+  ctx.fillStyle = bg;
+  ctx.fillRect(0,0,w,h);
+
+  // diamond pattern background
+  ctx.save();
+  ctx.strokeStyle = 'rgba(212,175,55,0.04)';
+  ctx.lineWidth = 1;
+  for (let x = 0; x < w; x += 60) {
+    for (let y = 0; y < h; y += 60) {
+      ctx.save();
+      ctx.translate(x + 30, y + 30);
+      ctx.rotate(Math.PI/4);
+      ctx.strokeRect(-10, -10, 20, 20);
+      ctx.restore();
+    }
+  }
+  ctx.restore();
+
+  // outer border
+  ctx.strokeStyle = GOLD;
+  ctx.lineWidth = 2;
+  ctx.strokeRect(40, 40, w-80, h-80);
+
+  // diamond ornament top center
+  ctx.save();
+  ctx.translate(w/2, 90);
+  ctx.rotate(Math.PI/4);
+  ctx.strokeStyle = GOLD;
+  ctx.lineWidth = 2;
+  ctx.strokeRect(-18, -18, 36, 36);
+  ctx.fillStyle = GOLD;
+  ctx.fillRect(-6, -6, 12, 12);
+  ctx.restore();
+
+  // logo
+  ctx.textAlign = 'center';
+  ctx.fillStyle = GOLD;
+  ctx.font = '400 14px "Montserrat"';
+  ctx.fillText(LOGO_TEXT, w/2, 145);
+
+  // title
+  ctx.fillStyle = WHITE;
+  ctx.font = '800 48px "Playfair Display"';
+  ctx.fillText('МИСС', w/2, 210);
+  ctx.fillStyle = goldGradient(ctx, 0, 220, w, 260);
+  ctx.font = '700 46px "Playfair Display"';
+  ctx.fillText('ЭЛЕГАНТНОСТЬ', w/2, 268);
+
+  // thin gold lines
+  ctx.fillStyle = GOLD;
+  ctx.fillRect(250, 295, w-500, 1);
+
+  // photo area
+  const px = 100, py = 325, pw = w-200, ph = 830;
+  drawPhoto(ctx, photo, px, py, pw, ph);
+  if (!photo) drawPhotoArea(ctx, px, py, pw, ph, GOLD, 1.5);
+  ctx.strokeStyle = GOLD;
+  ctx.lineWidth = 2;
+  ctx.strokeRect(px, py, pw, ph);
+  // diamond corners
+  [[px,py],[px+pw,py],[px,py+ph],[px+pw,py+ph]].forEach(([cx,cy]) => {
+    ctx.save();
+    ctx.translate(cx, cy);
+    ctx.rotate(Math.PI/4);
+    ctx.strokeStyle = GOLD;
+    ctx.lineWidth = 1.5;
+    ctx.strokeRect(-8, -8, 16, 16);
+    ctx.restore();
+  });
+
+  drawName(ctx, name, w/2, py + ph + 52, pw);
+  drawFooter(ctx, w, h);
+}
+
+const renderers = [
+  drawTemplate0, drawTemplate1, drawTemplate2, drawTemplate3, drawTemplate4,
+  drawTemplate5, drawTemplate6, drawTemplate7, drawTemplate8, drawTemplate9,
+];
+
+// ============================================================
+// UI BUILDER
+// ============================================================
+const grid = document.getElementById('grid');
+const state = templates.map(() => ({ photo: null, name: '' }));
+
+function renderCanvas(idx) {
+  const canvas = document.getElementById('canvas-' + idx);
+  const ctx = canvas.getContext('2d');
+  canvas.width = W;
+  canvas.height = H;
+  ctx.clearRect(0, 0, W, H);
+  renderers[idx](ctx, W, H, state[idx].photo, state[idx].name);
+}
+
+function renderAll() {
+  templates.forEach((_, i) => renderCanvas(i));
+}
+
+templates.forEach((t, i) => {
+  const card = document.createElement('div');
+  card.className = 'card';
+  card.innerHTML = `
+    <div class="card-title">${t.title} <span>#${i+1}</span></div>
+    <div class="canvas-wrap"><canvas id="canvas-${i}"></canvas></div>
+    <div class="controls">
+      <input type="text" id="name-${i}" placeholder="Имя участницы (опционально)">
+      <div class="btn-row">
+        <button class="btn btn-upload" onclick="document.getElementById('file-${i}').click()">Загрузить фото</button>
+        <button class="btn btn-download" onclick="downloadJPEG(${i})">Скачать JPEG</button>
+      </div>
+      <input type="file" id="file-${i}" accept="image/*">
+    </div>
+  `;
+  grid.appendChild(card);
+
+  // name input listener
+  setTimeout(() => {
+    document.getElementById('name-' + i).addEventListener('input', (e) => {
+      state[i].name = e.target.value;
+      renderCanvas(i);
+    });
+    document.getElementById('file-' + i).addEventListener('change', (e) => {
+      const file = e.target.files[0];
+      if (!file) return;
+      const img = new Image();
+      img.onload = () => {
+        state[i].photo = img;
+        renderCanvas(i);
+      };
+      img.src = URL.createObjectURL(file);
+    });
+  }, 0);
+});
+
+function downloadJPEG(idx) {
+  const canvas = document.getElementById('canvas-' + idx);
+  const link = document.createElement('a');
+  link.download = `poster-${templates[idx].id}.jpg`;
+  link.href = canvas.toDataURL('image/jpeg', 0.95);
+  link.click();
+}
+
+// Initial render after fonts load
+document.fonts.ready.then(() => {
+  renderAll();
+});
+// fallback
+setTimeout(renderAll, 1500);
+</script>
+</body>
+</html>

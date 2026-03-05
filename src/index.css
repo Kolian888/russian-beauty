@@ -1,0 +1,372 @@
+@import "tailwindcss";
+@import "./styles/photo-fixes.css";
+
+/* Custom Theme Variables */
+@theme {
+  /* Colors - Cherry / Gold / Black — Lighter & Warmer */
+  --color-gold: #D4AF37;
+  --color-gold-dark: #C9A227;
+  --color-gold-light: #E5C76B;
+  --color-cherry: #A0294A;
+  --color-cherry-dark: #6E1A35;
+  --color-cherry-light: #CC4D70;
+  --color-black: #1A0E14;
+  --color-black-light: #2A1A24;
+  --color-gray-dark: #5A3548;
+  --color-gray: #9A7888;
+  --color-gray-light: #D8C2CE;
+  --color-white: #FFF8F9;
+
+  /* Fonts */
+  --font-display: 'Playfair Display', serif;
+  --font-accent: 'Cormorant Garamond', serif;
+  --font-sans: 'Inter', sans-serif;
+
+  /* Spacing */
+  --spacing-section: 6rem;
+  --spacing-section-mobile: 4rem;
+
+  /* Animations */
+  --ease-luxury: cubic-bezier(0.25, 0.1, 0.25, 1);
+  --duration-base: 300ms;
+  --duration-slow: 500ms;
+}
+
+/* Base Styles */
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: var(--font-sans);
+  background-color: var(--color-black);
+  color: var(--color-white);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Typography */
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-display);
+  font-weight: 600;
+  line-height: 1.2;
+}
+
+.font-accent {
+  font-family: var(--font-accent);
+}
+
+/* Gold Gradient Text */
+.text-gradient-gold {
+  background: linear-gradient(135deg, var(--color-gold-light), var(--color-gold), var(--color-gold-dark));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Cherry-Gold Gradient Text */
+.text-gradient-cherry-gold {
+  background: linear-gradient(135deg, var(--color-cherry-light), var(--color-gold), var(--color-gold-dark));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Gold Border */
+.border-gold {
+  border-color: var(--color-gold);
+}
+
+.border-gold-gradient {
+  border-image: linear-gradient(135deg, var(--color-gold-light), var(--color-gold), var(--color-gold-dark)) 1;
+}
+
+/* Buttons */
+.btn-gold {
+  background: linear-gradient(135deg, var(--color-gold), var(--color-gold-dark));
+  color: var(--color-black);
+  font-weight: 600;
+  padding: 1rem 2rem;
+  border-radius: 0.75rem;
+  transition: all var(--duration-base) var(--ease-luxury);
+  box-shadow: 0 4px 20px rgba(212, 175, 55, 0.3), 0 4px 40px rgba(160, 41, 74, 0.15);
+}
+
+.btn-gold:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 30px rgba(212, 175, 55, 0.5), 0 8px 50px rgba(160, 41, 74, 0.25);
+}
+
+.btn-outline-gold {
+  background: rgba(255, 248, 249, 0.05);
+  color: var(--color-gold);
+  border: 2px solid var(--color-gold);
+  font-weight: 600;
+  padding: 1rem 2rem;
+  border-radius: 0.75rem;
+  transition: all var(--duration-base) var(--ease-luxury);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+
+.btn-outline-gold:hover {
+  background: var(--color-gold);
+  color: var(--color-black);
+}
+
+/* ============================================
+   LIQUID GLASS SYSTEM
+   ============================================ */
+
+/* Base liquid glass — navigation, overlays */
+.glass {
+  background: linear-gradient(
+    135deg,
+    rgba(255, 248, 249, 0.08),
+    rgba(160, 41, 74, 0.06),
+    rgba(255, 248, 249, 0.04)
+  );
+  backdrop-filter: blur(24px) saturate(1.4);
+  -webkit-backdrop-filter: blur(24px) saturate(1.4);
+  border: 1px solid rgba(255, 248, 249, 0.12);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 248, 249, 0.1),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.05),
+    0 8px 32px rgba(0, 0, 0, 0.2);
+}
+
+/* Liquid glass cards — main card style */
+.card-luxury {
+  background: linear-gradient(
+    145deg,
+    rgba(255, 248, 249, 0.07),
+    rgba(160, 41, 74, 0.05),
+    rgba(212, 175, 55, 0.03)
+  );
+  backdrop-filter: blur(20px) saturate(1.3);
+  -webkit-backdrop-filter: blur(20px) saturate(1.3);
+  border: 1px solid rgba(255, 248, 249, 0.1);
+  border-radius: 1.25rem;
+  transition: all var(--duration-base) var(--ease-luxury);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 248, 249, 0.08),
+    0 4px 24px rgba(0, 0, 0, 0.15);
+}
+
+.card-luxury:hover {
+  border-color: rgba(212, 175, 55, 0.4);
+  background: linear-gradient(
+    145deg,
+    rgba(255, 248, 249, 0.1),
+    rgba(160, 41, 74, 0.07),
+    rgba(212, 175, 55, 0.05)
+  );
+  box-shadow:
+    inset 0 1px 0 rgba(255, 248, 249, 0.15),
+    0 8px 40px rgba(212, 175, 55, 0.12),
+    0 0 60px rgba(160, 41, 74, 0.08);
+}
+
+/* Liquid glass — stronger variant for featured elements */
+.liquid-glass {
+  background: linear-gradient(
+    160deg,
+    rgba(255, 248, 249, 0.12),
+    rgba(204, 77, 112, 0.08),
+    rgba(212, 175, 55, 0.05),
+    rgba(255, 248, 249, 0.06)
+  );
+  backdrop-filter: blur(30px) saturate(1.5);
+  -webkit-backdrop-filter: blur(30px) saturate(1.5);
+  border: 1px solid rgba(255, 248, 249, 0.15);
+  border-radius: 1.5rem;
+  box-shadow:
+    inset 0 1px 1px rgba(255, 248, 249, 0.12),
+    inset 0 -1px 1px rgba(0, 0, 0, 0.05),
+    0 8px 40px rgba(0, 0, 0, 0.2),
+    0 0 0 0.5px rgba(255, 248, 249, 0.05);
+  position: relative;
+  overflow: hidden;
+}
+
+/* Liquid glass shimmer highlight */
+.liquid-glass::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -50%;
+  width: 200%;
+  height: 100%;
+  background: linear-gradient(
+    105deg,
+    transparent 40%,
+    rgba(255, 248, 249, 0.04) 45%,
+    rgba(255, 248, 249, 0.08) 50%,
+    rgba(255, 248, 249, 0.04) 55%,
+    transparent 60%
+  );
+  pointer-events: none;
+  animation: liquid-shimmer 8s ease-in-out infinite;
+}
+
+@keyframes liquid-shimmer {
+  0%, 100% { transform: translateX(-30%); }
+  50% { transform: translateX(30%); }
+}
+
+/* Liquid glass — compact for small elements */
+.liquid-glass-sm {
+  background: linear-gradient(
+    135deg,
+    rgba(255, 248, 249, 0.1),
+    rgba(160, 41, 74, 0.06)
+  );
+  backdrop-filter: blur(16px) saturate(1.3);
+  -webkit-backdrop-filter: blur(16px) saturate(1.3);
+  border: 1px solid rgba(255, 248, 249, 0.1);
+  border-radius: 0.75rem;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 248, 249, 0.08),
+    0 4px 16px rgba(0, 0, 0, 0.12);
+}
+
+/* ============================================
+   END LIQUID GLASS SYSTEM
+   ============================================ */
+
+/* Cherry-tinted section backgrounds */
+.bg-cherry-gradient {
+  background: linear-gradient(135deg, var(--color-cherry-dark), var(--color-black));
+}
+
+.bg-cherry-subtle {
+  background: linear-gradient(180deg, rgba(160, 41, 74, 0.1), transparent);
+}
+
+/* Section Styles */
+.section {
+  padding: var(--spacing-section) 0;
+}
+
+@media (max-width: 768px) {
+  .section {
+    padding: var(--spacing-section-mobile) 0;
+  }
+}
+
+/* Container */
+.container-custom {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 0 1.5rem;
+}
+
+@media (min-width: 768px) {
+  .container-custom {
+    padding: 0 2rem;
+  }
+}
+
+/* Divider with Gold + Cherry */
+.divider-gold {
+  height: 2px;
+  background: linear-gradient(90deg, transparent, var(--color-cherry-light), var(--color-gold), var(--color-cherry-light), transparent);
+}
+
+/* Form Inputs — liquid glass style */
+input, textarea, select {
+  background: linear-gradient(
+    135deg,
+    rgba(255, 248, 249, 0.06),
+    rgba(160, 41, 74, 0.04)
+  );
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 248, 249, 0.1);
+  color: var(--color-white);
+  border-radius: 0.75rem;
+  padding: 0.875rem 1rem;
+  width: 100%;
+  transition: all var(--duration-base) var(--ease-luxury);
+}
+
+input:focus, textarea:focus, select:focus {
+  outline: none;
+  border-color: rgba(212, 175, 55, 0.5);
+  box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.1), 0 0 20px rgba(212, 175, 55, 0.05);
+  background: linear-gradient(
+    135deg,
+    rgba(255, 248, 249, 0.08),
+    rgba(160, 41, 74, 0.06)
+  );
+}
+
+input::placeholder, textarea::placeholder {
+  color: var(--color-gray);
+}
+
+/* Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--color-black);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--color-gray-dark);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-gold);
+}
+
+/* Selection */
+::selection {
+  background: var(--color-gold);
+  color: var(--color-black);
+}
+
+/* Loading Shimmer */
+@keyframes shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+.shimmer {
+  background: linear-gradient(90deg, var(--color-black-light) 0%, var(--color-gray-dark) 50%, var(--color-black-light) 100%);
+  background-size: 200% 100%;
+  animation: shimmer 2s infinite;
+}
+
+/* Crown Icon Animation */
+@keyframes crown-glow {
+  0%, 100% {
+    filter: drop-shadow(0 0 10px rgba(212, 175, 55, 0.5)) drop-shadow(0 0 20px rgba(160, 41, 74, 0.3));
+  }
+  50% {
+    filter: drop-shadow(0 0 20px rgba(212, 175, 55, 0.8)) drop-shadow(0 0 40px rgba(160, 41, 74, 0.5));
+  }
+}
+
+.crown-glow {
+  animation: crown-glow 3s ease-in-out infinite;
+}
+
+/* 3D Crown styles */
+.crown-3d-container {
+  perspective: 1200px;
+  perspective-origin: center center;
+}
+
+.crown-3d-layer {
+  transform-style: preserve-3d;
+  backface-visibility: hidden;
+}

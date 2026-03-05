@@ -1,0 +1,35 @@
+/* Fixes for photo positioning to prevent face cropping */
+
+/* Jury photos - position faces at top */
+#jury img {
+  object-position: center 20% !important; /* Shift focus to upper part where faces are */
+}
+
+/* Gallery photos - keep centered but allow some flexibility */
+#gallery img {
+  object-position: center 30% !important;
+}
+
+/* Categories banner images - focus on upper portion */
+#categories .aspect-\[21\/9\] img,
+#categories .md\:aspect-\[3\/1\] img {
+  object-position: center top !important;
+}
+
+/* Competition cards - focus on upper portion for portraits */
+#competitions img {
+  object-position: center 25% !important;
+}
+
+/* Hero section - keep centered */
+.hero-bg {
+  object-position: center center !important;
+}
+
+/* Alternative: Use object-contain for specific sections if faces are still cropped */
+/*
+#jury img {
+  object-fit: contain !important;
+  background-color: #1a0a0a;
+}
+*/

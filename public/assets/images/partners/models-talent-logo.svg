@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="300" height="100" viewBox="0 0 300 100" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="goldGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#E5C76B;stop-opacity:1" />
+      <stop offset="50%" style="stop-color:#D4AF37;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#C9A227;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+
+  <!-- Background -->
+  <rect width="300" height="100" fill="#1A0E14" rx="8"/>
+
+  <!-- Border -->
+  <rect x="2" y="2" width="296" height="96" fill="none" stroke="url(#goldGradient)" stroke-width="1" rx="6" opacity="0.3"/>
+
+  <!-- Main Text -->
+  <text x="150" y="40" font-family="Playfair Display, serif" font-size="26" font-weight="700" fill="url(#goldGradient)" text-anchor="middle">
+    MODELS &amp; TALENT
+  </text>
+
+  <!-- Subtitle -->
+  <text x="150" y="65" font-family="Inter, sans-serif" font-size="14" font-weight="300" fill="#D8C2CE" text-anchor="middle" letter-spacing="2">
+    GROUP
+  </text>
+
+  <!-- Decorative elements -->
+  <line x1="50" y1="50" x2="100" y2="50" stroke="url(#goldGradient)" stroke-width="0.5" opacity="0.5"/>
+  <line x1="200" y1="50" x2="250" y2="50" stroke="url(#goldGradient)" stroke-width="0.5" opacity="0.5"/>
+</svg>
