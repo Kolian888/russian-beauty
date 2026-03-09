@@ -51,6 +51,7 @@ function GuestCard({ guest }: { guest: Guest }) {
       variants={itemVariants}
       whileHover={{ y: -5 }}
       className="group"
+      style={{ width: 'calc(50% - 10px)', maxWidth: '200px', minWidth: '150px' }}
     >
       <div className="relative overflow-hidden rounded-xl liquid-glass-sm transition-all duration-500 group-hover:border-[var(--color-gold)]/40 h-full flex flex-col">
         {/* Photo or Initials */}
@@ -72,10 +73,6 @@ function GuestCard({ guest }: { guest: Guest }) {
           )}
           {/* Gradient overlay */}
           <div className="absolute inset-0 bg-gradient-to-t from-[var(--color-black)] via-transparent to-transparent" />
-          {/* Years badge */}
-          <div className="absolute top-3 left-3 px-2 py-0.5 rounded-full bg-[var(--color-black)]/70 text-[var(--color-gold)] text-[10px] font-medium">
-            {guest.years}
-          </div>
         </div>
 
         {/* Info */}
@@ -172,7 +169,7 @@ export function HonoraryGuests() {
                 initial="hidden"
                 whileInView="visible"
                 viewport={{ once: true, margin: '-50px' }}
-                className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-5"
+                className="flex flex-wrap justify-center gap-5"
               >
                 {category.guests.map((guest) => (
                   <GuestCard key={guest.id} guest={guest} />

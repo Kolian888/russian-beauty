@@ -1,3 +1,4 @@
+import { useEffect } from 'react'
 import {
   Navigation,
   Crown3D,
@@ -18,8 +19,13 @@ import {
   Footer,
   BackToTop,
 } from './components'
+import { captureReferral } from './lib/referral'
 
 function App() {
+  useEffect(() => {
+    captureReferral()
+  }, [])
+
   return (
     <div className="min-h-screen bg-[var(--color-black)] relative">
       {/* 3D Rotating Crown Background */}
@@ -38,11 +44,11 @@ function App() {
         <SocialProof />
         <WhyParticipate />
         <Benefits />
+        <Jury />
+        <HonoraryGuests />
         <Competitions />
         <Categories />
         <Gallery />
-        <Jury />
-        <HonoraryGuests />
         <Partners />
         <Schedule />
         <Regulations />

@@ -71,7 +71,7 @@ export function Jury() {
           initial="hidden"
           whileInView="visible"
           viewport={{ once: true, margin: '-100px' }}
-          className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6"
+          className="flex flex-wrap justify-center gap-6"
         >
           {juryContent.members.map((member) => {
             const Icon = roleIconMap[member.role] || Crown
@@ -80,18 +80,27 @@ export function Jury() {
                 key={member.id}
                 variants={itemVariants}
                 whileHover={{ y: -5 }}
+                style={{ width: 'calc(50% - 12px)', maxWidth: '200px', minWidth: '150px' }}
                 className="group"
               >
                 <div className="relative overflow-hidden rounded-xl liquid-glass-sm transition-all duration-500 group-hover:border-[var(--color-gold)]/40 h-full flex flex-col">
                   {/* Photo */}
-                  <div className="aspect-square relative overflow-hidden">
-                    <img
-                      src={member.photo}
-                      alt={member.name}
-                      className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
-                      style={{ objectPosition: 'center 20%' }}
-                      loading="lazy"
-                    />
+                  <div className="aspect-square relative overflow-hidden bg-gradient-to-br from-[var(--color-cherry-dark)]/30 to-[var(--color-black)]">
+                    {member.photo ? (
+                      <img
+                        src={member.photo}
+                        alt={member.name}
+                        className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+                        style={{ objectPosition: member.objectPosition || 'center 20%' }}
+                        loading="lazy"
+                      />
+                    ) : (
+                      <div className="w-full h-full flex items-center justify-center">
+                        <span className="text-3xl font-bold text-[var(--color-gold)]/60 font-serif">
+                          {member.name.split(' ').map((w: string) => w[0]).join('').slice(0, 2).toUpperCase()}
+                        </span>
+                      </div>
+                    )}
                     {/* Gradient overlay */}
                     <div className="absolute inset-0 bg-gradient-to-t from-[var(--color-black)] via-transparent to-transparent" />
                     {/* Role icon badge */}

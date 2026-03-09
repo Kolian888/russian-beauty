@@ -60,11 +60,17 @@ export function Competitions() {
                       <img
                         src={item.image}
                         alt={item.title}
-                        className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+                        className={`w-full h-full object-cover transition-transform duration-500 ${
+                          item.id === 'young-miss' ? 'young-miss-img'
+                          : item.id === 'best-model' ? 'best-model-img'
+                          : 'group-hover:scale-110'
+                        }`}
                         style={{
-                          objectPosition: item.id === 'young-miss' || item.id === 'best-model'
-                            ? 'center 40%'  // Спускаем ниже для Young Miss и Best Model
-                            : 'center 25%'
+                          objectPosition: item.id === 'young-miss'
+                            ? 'center 4%'
+                            : item.id === 'best-model'
+                              ? 'center 4%'
+                              : 'center 25%'
                         }}
                         loading="lazy"
                       />

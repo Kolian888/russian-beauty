@@ -35,68 +35,54 @@ export function Hero() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8 }}
         >
-          {/* Zaitsev Anniversary Badge - More Prominent */}
+          {/* Title */}
           <motion.div
             initial={{ opacity: 0, scale: 0.9 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ delay: 0.2 }}
-            className="mb-10"
+            className="mb-6"
           >
-            <div className="inline-flex flex-col items-center gap-3 px-12 py-6 rounded-3xl bg-gradient-to-b from-[var(--color-black)]/80 to-[var(--color-black)]/60 backdrop-blur-lg border border-[var(--color-gold)]/50 shadow-2xl">
-              <div className="flex items-center gap-3">
-                <div className="w-20 h-[1px] bg-gradient-to-r from-transparent via-[var(--color-gold)] to-transparent" />
-                <span className="text-[var(--color-gold)] text-sm uppercase tracking-[0.4em] font-light">
-                  Посвящается
-                </span>
-                <div className="w-20 h-[1px] bg-gradient-to-l from-transparent via-[var(--color-gold)] to-transparent" />
-              </div>
-              <div className="text-[var(--color-white)] text-2xl md:text-3xl font-bold">
-                88-летию Вячеслава Зайцева
-              </div>
-              <div className="text-[var(--color-gold-light)] text-sm font-medium">
-                Народного художника России
-              </div>
+            <h1 className="text-5xl md:text-7xl lg:text-8xl font-bold mb-4">
+              <span className="text-[var(--color-white)]">{heroContent.title}</span>
+              <br />
+              <span className="text-gradient-gold">{heroContent.titleAccent}</span>
+            </h1>
+          </motion.div>
+
+          {/* Subtitle + Description in elegant rectangle */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.35 }}
+            className="mb-8"
+          >
+            <div className="inline-flex flex-col items-center gap-3 px-10 py-6 rounded-3xl bg-gradient-to-b from-[var(--color-black)]/80 to-[var(--color-black)]/60 backdrop-blur-lg border border-[var(--color-gold)]/50 shadow-2xl max-w-2xl mx-auto">
+              <p className="font-accent text-2xl md:text-3xl text-[var(--color-gold)]">
+                {heroContent.subtitle}
+              </p>
+              <div className="w-full h-[1px] bg-gradient-to-r from-transparent via-[var(--color-gold)]/40 to-transparent" />
+              <p className="text-[var(--color-gray-light)] text-base md:text-lg text-center">
+                Отборочный этап на международные конкурсы European Beauty, Asian Beauty и World Beauty 2026
+              </p>
             </div>
           </motion.div>
 
-          {/* Title */}
-          <h1 className="text-5xl md:text-7xl lg:text-8xl font-bold mb-4">
-            <span className="text-[var(--color-white)]">{heroContent.title}</span>
-            <br />
-            <span className="text-gradient-gold">{heroContent.titleAccent}</span>
-          </h1>
-
-          {/* Subtitle */}
-          <p className="font-accent text-2xl md:text-3xl text-[var(--color-gold)] mb-4">
-            {heroContent.subtitle}
-          </p>
-
-          {/* Description with emphasis */}
-          <div className="max-w-3xl mx-auto mb-8 space-y-3">
-            <p className="text-[var(--color-white)] text-xl md:text-2xl font-medium leading-relaxed">
-              Фестиваль проводится в честь{' '}
-              <span className="text-[var(--color-gold)] font-bold">88-летия</span>{' '}
-              Народного художника России{' '}
-              <span className="text-[var(--color-gold)]">Вячеслава Михайловича Зайцева</span>
-            </p>
-            <p className="text-[var(--color-gray-light)] text-lg">
-              Отборочный этап на международные конкурсы European Beauty, Asian Beauty и World Beauty 2026
-            </p>
-          </div>
-
-          {/* Event Info - More Elegant */}
-          <div className="flex flex-col items-center gap-2 mb-10">
-            <div className="flex items-center gap-4">
-              <div className="h-[1px] w-16 bg-gradient-to-r from-transparent to-[var(--color-gold)]/50" />
-              <div className="text-[var(--color-gold)] text-sm uppercase tracking-[0.2em] font-light">
-                27–29 марта 2026
+          {/* Event Info in dark rectangle */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.45 }}
+            className="mb-8"
+          >
+            <div className="inline-flex flex-col items-center gap-2 px-8 py-4 rounded-2xl bg-gradient-to-b from-[var(--color-black)]/80 to-[var(--color-black)]/60 backdrop-blur-lg border border-[var(--color-gold)]/40 shadow-xl">
+              <div className="flex items-center gap-4">
+                <div className="h-[1px] w-12 bg-gradient-to-r from-transparent to-[var(--color-gold)]/50" />
+                <span className="text-[var(--color-gold)] text-sm uppercase tracking-[0.2em] font-medium">27–29 марта 2026</span>
+                <div className="h-[1px] w-12 bg-gradient-to-l from-transparent to-[var(--color-gold)]/50" />
               </div>
-              <div className="h-[1px] w-16 bg-gradient-to-l from-transparent to-[var(--color-gold)]/50" />
+              <span className="text-[var(--color-gray-light)] text-sm">Парк-отель Гринвуд, Московская область</span>
             </div>
-            <div className="text-[var(--color-gray-light)] text-sm">
-              Парк-отель Гринвуд, Московская область
-            </div>
-          </div>
+          </motion.div>
 
           {/* Countdown */}
           {!countdown.isExpired && (

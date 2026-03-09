@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { Menu, X, Crown } from 'lucide-react'
+import { Menu, X } from 'lucide-react'
 import { Button } from './ui'
 import { navigationContent } from '@/content'
 import { scrollToElement } from '@/lib/utils'
@@ -42,7 +42,7 @@ export function Navigation() {
               window.scrollTo({ top: 0, behavior: 'smooth' })
             }}
           >
-            <Crown className="w-7 h-7 crown-glow" />
+            <img src="/assets/images/logos/world-beauty-gold.png" alt="World Beauty" className="h-10 w-10 object-contain" />
             <span>{navigationContent.logo}</span>
           </a>
 

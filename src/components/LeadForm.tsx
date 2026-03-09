@@ -7,6 +7,7 @@ import { Send, CheckCircle, Shield, Clock, Users } from 'lucide-react'
 import { Button, Input, Textarea, Select, Checkbox } from './ui'
 import { formContent, siteConfig } from '@/content'
 import { sendToTelegram, type FormData as TelegramFormData } from '@/lib/telegram'
+import { getReferral } from '@/lib/referral'
 
 // Form CRO: stricter validation with helpful error messages
 const formSchema = z.object({
@@ -57,6 +58,7 @@ export function LeadForm() {
       email: data.email,
       socialLinks: data.socialLinks,
       comment: data.comment,
+      ref: getReferral(),
     }
 
     const success = await sendToTelegram(telegramData)

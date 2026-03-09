@@ -21,6 +21,16 @@
   object-position: center 25% !important;
 }
 
+/* Young Miss — индивидуальное позиционирование, отключает глобальное правило */
+#competitions img.young-miss-img {
+  object-position: center 4% !important;
+}
+
+/* Best Model — те же настройки, что и Young Miss */
+#competitions img.best-model-img {
+  object-position: center 4% !important;
+}
+
 /* Hero section - keep centered */
 .hero-bg {
   object-position: center center !important;

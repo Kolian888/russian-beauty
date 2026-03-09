@@ -50,12 +50,9 @@ export function Partners() {
           className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-6 mb-12"
         >
           {partnersContent.items.map((partner) => (
-            <motion.a
+            <motion.div
               key={partner.id}
               variants={itemVariants}
-              href={partner.url}
-              target="_blank"
-              rel="noopener noreferrer"
               className="group"
             >
               <div className="aspect-[5/2] rounded-xl liquid-glass-sm flex items-center justify-center p-4 transition-all duration-300 group-hover:border-[var(--color-gold)]/40 overflow-hidden">
@@ -68,7 +65,7 @@ export function Partners() {
               <p className="text-center text-[var(--color-gray-light)] text-sm mt-3">
                 {partner.name}
               </p>
-            </motion.a>
+            </motion.div>
           ))}
         </motion.div>
 

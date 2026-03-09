@@ -67,10 +67,10 @@ export function Categories() {
                       className="w-full h-full object-cover"
                       style={{
                         objectPosition: group.groupTitle === 'Mini'
-                          ? 'center 35%'    // Спускаем ниже для Mini
+                          ? 'center 50%'
                           : group.groupTitle === 'Miss'
-                          ? 'center 30%'    // Спускаем ниже для Miss
-                          : 'center 15%'    // Немного ниже для Mrs
+                          ? 'center 25%'    // лица видны в верхней части
+                          : 'center 5%'     // Mrs — группа видна сверху
                       }}
                       loading="lazy"
                     />

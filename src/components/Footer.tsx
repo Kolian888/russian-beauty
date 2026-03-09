@@ -1,5 +1,5 @@
 import { motion } from 'framer-motion'
-import { Crown, Mail, Phone, Send, MapPin, Calendar, Heart } from 'lucide-react'
+import { Mail, Phone, Send, MapPin, Calendar, Heart } from 'lucide-react'
 import { footerContent, siteConfig, navigationContent } from '@/content'
 import { scrollToElement } from '@/lib/utils'
 
@@ -30,7 +30,7 @@ export function Footer() {
               }}
               className="flex items-center gap-2 text-[var(--color-gold)] font-display text-2xl font-bold mb-4"
             >
-              <Crown className="w-7 h-7" />
+              <img src="/assets/images/logos/world-beauty-gold.png" alt="World Beauty" className="h-10 w-10 object-contain" />
               <span>{footerContent.logo}</span>
             </a>
             <p className="text-[var(--color-gray-light)] mb-4">
