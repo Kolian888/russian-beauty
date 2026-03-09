@@ -29,7 +29,7 @@ export function Hero() {
       <div className="absolute bottom-20 right-10 w-96 h-96 bg-[var(--color-gold)]/5 rounded-full blur-3xl" />
 
       {/* Content */}
-      <div className="relative z-10 container-custom text-center py-32">
+      <div className="relative z-10 container-custom text-center pt-44 pb-32 md:py-32">
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
@@ -67,30 +67,13 @@ export function Hero() {
             </div>
           </motion.div>
 
-          {/* Event Info in dark rectangle */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.45 }}
-            className="mb-8"
-          >
-            <div className="inline-flex flex-col items-center gap-2 px-8 py-4 rounded-2xl bg-gradient-to-b from-[var(--color-black)]/80 to-[var(--color-black)]/60 backdrop-blur-lg border border-[var(--color-gold)]/40 shadow-xl">
-              <div className="flex items-center gap-4">
-                <div className="h-[1px] w-12 bg-gradient-to-r from-transparent to-[var(--color-gold)]/50" />
-                <span className="text-[var(--color-gold)] text-sm uppercase tracking-[0.2em] font-medium">27–29 марта 2026</span>
-                <div className="h-[1px] w-12 bg-gradient-to-l from-transparent to-[var(--color-gold)]/50" />
-              </div>
-              <span className="text-[var(--color-gray-light)] text-sm">Парк-отель Гринвуд, Московская область</span>
-            </div>
-          </motion.div>
-
           {/* Countdown */}
           {!countdown.isExpired && (
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.5 }}
-              className="flex justify-center gap-4 mb-10"
+              className="flex justify-center gap-4 mb-8"
             >
               {[
                 { value: countdown.days, label: 'дней' },
@@ -112,6 +95,23 @@ export function Hero() {
               ))}
             </motion.div>
           )}
+
+          {/* Event Info in dark rectangle — moved below countdown */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.55 }}
+            className="mb-8"
+          >
+            <div className="inline-flex flex-col items-center gap-2 px-8 py-4 rounded-2xl bg-gradient-to-b from-[var(--color-black)]/80 to-[var(--color-black)]/60 backdrop-blur-lg border border-[var(--color-gold)]/40 shadow-xl">
+              <div className="flex items-center gap-4">
+                <div className="h-[1px] w-12 bg-gradient-to-r from-transparent to-[var(--color-gold)]/50" />
+                <span className="text-[var(--color-gold)] text-sm uppercase tracking-[0.2em] font-medium">27–29 марта 2026</span>
+                <div className="h-[1px] w-12 bg-gradient-to-l from-transparent to-[var(--color-gold)]/50" />
+              </div>
+              <span className="text-[var(--color-gray-light)] text-sm">Парк-отель Гринвуд, Московская область</span>
+            </div>
+          </motion.div>
 
           {/* CTA Buttons */}
           <motion.div
