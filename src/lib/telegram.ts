@@ -2,6 +2,12 @@ const TELEGRAM_BOT_TOKEN = import.meta.env.VITE_TELEGRAM_BOT_TOKEN || ''
 const TELEGRAM_CHAT_ID = import.meta.env.VITE_TELEGRAM_CHAT_ID || ''
 const SHEETS_WEBHOOK = import.meta.env.VITE_SHEETS_WEBHOOK || ''
 
+// Реферал → личный Telegram Chat ID представителя
+const REFERRAL_CHAT_MAP: Record<string, string> = {
+  vadim: '970425739',   // Вадим Хусаинов
+  // besti: 'CHAT_ID',  // Натали Бести — добавить когда пришлёт ID
+}
+
 export interface FormData {
   fullName: string
   age: string
@@ -28,15 +34,18 @@ export async function sendToTelegram(data: FormData): Promise<boolean> {
     return true
   }
 
+  const refChatId = data.ref ? REFERRAL_CHAT_MAP[data.ref.toLowerCase()] : undefined
+
   const [telegramOk] = await Promise.allSettled([
-    postTelegram(data),
+    postTelegram(data, TELEGRAM_CHAT_ID),
+    refChatId ? postTelegram(data, refChatId) : Promise.resolve(true),
     postSheets(data),
   ])
 
   return telegramOk.status === 'fulfilled' && telegramOk.value
 }
 
-async function postTelegram(data: FormData): Promise<boolean> {
+async function postTelegram(data: FormData, chatId: string): Promise<boolean> {
   try {
     const response = await fetch(
       `https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`,
@@ -44,7 +53,7 @@ async function postTelegram(data: FormData): Promise<boolean> {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          chat_id: TELEGRAM_CHAT_ID,
+          chat_id: chatId,
           text: formatMessage(data),
           parse_mode: 'HTML',
         }),
