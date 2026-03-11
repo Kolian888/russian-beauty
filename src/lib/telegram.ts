@@ -5,7 +5,7 @@ const SHEETS_WEBHOOK = import.meta.env.VITE_SHEETS_WEBHOOK || ''
 // Реферал → личный Telegram Chat ID представителя
 const REFERRAL_CHAT_MAP: Record<string, string> = {
   vadim: '970425739',   // Вадим Хусаинов
-  govorova: 'CHAT_ID',  // Говорова — заменить CHAT_ID на реальный ID
+  govorova: '434659936',  // Говорова
   // besti: 'CHAT_ID',  // Натали Бести — добавить когда пришлёт ID
 }
 
